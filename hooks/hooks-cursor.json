@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "./hooks/run-hook.cmd session-start"
+      },
+      {
+        "command": "node ./hooks/apex-yagni-session-start.cjs"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "node ./hooks/apex-yagni-prompt-filter.cjs"
+      }
+    ]
+  }
+}
