@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// packages/installer/src/index.ts
+// src/index.ts
 import { spawnSync } from "child_process";
 import fs from "fs";
 import os from "os";
