@@ -137,9 +137,10 @@ export const layer = Layer.effect(
 
         const agents: Record<string, Info> = {
           build: {
-            name: "build",
+            name: "Atlas - Build Worker",
             description: "The default agent. Executes tools based on configured permissions.",
             options: {},
+            color: "#ff0000",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
@@ -152,9 +153,10 @@ export const layer = Layer.effect(
             native: true,
           },
           plan: {
-            name: "plan",
+            name: "Ogre - Read-Only Planner",
             description: "Plan mode. Disallows all edit tools.",
             options: {},
+            color: "#ff0000",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
@@ -178,8 +180,9 @@ export const layer = Layer.effect(
             native: true,
           },
           general: {
-            name: "general",
+            name: "Monarch - Multi-Task Worker",
             description: `General-purpose agent for researching complex questions and executing multi-step tasks. Use this agent to execute multiple units of work in parallel.`,
+            color: "#ff0000",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
@@ -192,7 +195,7 @@ export const layer = Layer.effect(
             native: true,
           },
           explore: {
-            name: "explore",
+            name: "Cloak - Code Searcher",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
@@ -211,15 +214,17 @@ export const layer = Layer.effect(
             description: `Fast agent specialized for exploring codebases. Use this when you need to quickly find files by patterns (eg. "src/components/**/*.tsx"), search code for keywords (eg. "API endpoints"), or answer questions about the codebase (eg. "how do API endpoints work?"). When calling this agent, specify the desired thoroughness level: "quick" for basic searches, "medium" for moderate exploration, or "very thorough" for comprehensive analysis across multiple locations and naming conventions.`,
             prompt: PROMPT_EXPLORE,
             options: {},
+            color: "#ff0000",
             mode: "subagent",
             native: true,
           },
           compaction: {
-            name: "compaction",
+            name: "Brute - Context Squeezer",
             mode: "primary",
             native: true,
             hidden: true,
             prompt: PROMPT_COMPACTION,
+            color: "#ff0000",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
@@ -230,11 +235,12 @@ export const layer = Layer.effect(
             options: {},
           },
           title: {
-            name: "title",
+            name: "MRVN - Session Namer",
             mode: "primary",
             options: {},
             native: true,
             hidden: true,
+            color: "#ff0000",
             temperature: 0.5,
             permission: Permission.merge(
               defaults,
@@ -246,11 +252,12 @@ export const layer = Layer.effect(
             prompt: PROMPT_TITLE,
           },
           summary: {
-            name: "summary",
+            name: "MRVN - Change Logger",
             mode: "primary",
             options: {},
             native: true,
             hidden: true,
+            color: "#ff0000",
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({

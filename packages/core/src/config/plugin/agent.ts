@@ -21,6 +21,7 @@ const decodeAgent = Schema.decodeUnknownOption(ConfigAgent.Info)
 const decodeLegacyAgent = Schema.decodeUnknownOption(ConfigAgentV1.Info)
 const decodeConfig = Schema.decodeUnknownOption(Config.Info)
 const agentKeys = new Set([
+  "name",
   "model",
   "variant",
   "request",
@@ -108,13 +109,14 @@ export const Plugin = define({
                 Object.assign(agent.request.headers, item.request.headers ?? {})
                 Object.assign(agent.request.body, item.request.body ?? {})
               }
-              if (item.system !== undefined) agent.system = item.system
-              if (item.description !== undefined) agent.description = item.description
-              if (item.mode !== undefined) agent.mode = item.mode
-              if (item.hidden !== undefined) agent.hidden = item.hidden
-              if (item.color !== undefined) agent.color = item.color
-              if (item.steps !== undefined) agent.steps = item.steps
-              if (item.permissions !== undefined) agent.permissions.push(...item.permissions)
+            if (item.name !== undefined) agent.name = item.name
+            if (item.system !== undefined) agent.system = item.system
+            if (item.description !== undefined) agent.description = item.description
+            if (item.mode !== undefined) agent.mode = item.mode
+            if (item.hidden !== undefined) agent.hidden = item.hidden
+            if (item.color !== undefined) agent.color = item.color
+            if (item.steps !== undefined) agent.steps = item.steps
+            if (item.permissions !== undefined) agent.permissions.push(...item.permissions)
             })
           }
         }

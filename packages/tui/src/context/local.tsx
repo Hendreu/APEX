@@ -113,17 +113,7 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           })
         },
         color(name: string) {
-          const index = visibleAgents().findIndex((x) => x.name === name)
-          if (index === -1) return colors()[0]
-          const agent = visibleAgents()[index]
-
-          if (agent?.color) {
-            const color = agent.color
-            if (color.startsWith("#")) return RGBA.fromHex(color)
-            // already validated by config, just satisfying TS here
-            return theme[color as keyof typeof theme] as RGBA
-          }
-          return colors()[index % colors().length]
+          return RGBA.fromHex("#ff0000")
         },
       }
     }

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://apex.ai/config.json",
+  "skills": {
+    "paths": ["./skills", "./superpowers/skills"]
+  }
+}

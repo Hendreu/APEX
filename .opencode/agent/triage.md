@@ -2,7 +2,7 @@
 mode: primary
 hidden: true
 model: opencode/gpt-5.4-mini
-color: "#44BA81"
+color: "#E50914"
 tools:
   "*": false
   "github-triage": true

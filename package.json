@@ -27,7 +27,8 @@
       "packages/console/*",
       "packages/stats/*",
       "packages/sdk/js",
-      "packages/slack"
+      "packages/slack",
+      "packages/installer"
     ],
     "catalog": {
       "@effect/opentelemetry": "4.0.0-beta.83",
@@ -95,6 +96,7 @@
   "devDependencies": {
     "@actions/artifact": "5.0.1",
     "@tsconfig/bun": "catalog:",
+    "@tsconfig/node22": "22.0.5",
     "@types/mime-types": "3.0.1",
     "@typescript/native-preview": "catalog:",
     "glob": "13.0.5",

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@apex-code/apex",
+  "version": "1.0.2",
+  "description": "One-line installer for APEX Protocol — clones, installs deps, and sets up the CLI",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "apex": "./bin/apex.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --outfile bin/apex.js --target node",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
