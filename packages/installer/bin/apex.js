@@ -80,83 +80,32 @@ function getArch() {
       return process.arch;
   }
 }
-function downloadApexBinary(force = false) {
+function getBinaryPath() {
   const platform = getPlatform();
   const arch = getArch();
-  const base = `apex-${platform}-${arch}`;
-  const distDir = path.join(APEX_DIR, "packages", "opencode", "dist-restored", base);
-  const targetDir = path.join(distDir, "bin");
-  const targetBinary = path.join(targetDir, platform === "windows" ? "apex.exe" : "apex");
-  if (fs.existsSync(targetBinary) && !force) {
-    log("Binary already exists, skipping download.");
-    return 0;
-  }
-  const tempDir = path.join(os.tmpdir(), `apex-install-${Date.now()}`);
-  ensureDir(tempDir);
-  const archiveExt = platform === "linux" ? ".tar.gz" : ".zip";
-  const filename = `opencode-${platform}-${arch}${archiveExt}`;
-  const url = `https://github.com/anomalyco/opencode/releases/latest/download/${filename}`;
-  const downloadPath = path.join(tempDir, filename);
-  log(`Downloading from ${url}...`);
-  const downloadResult = execQuiet("curl", ["-fsSL", "-o", downloadPath, url]);
-  if (downloadResult.status !== 0) {
-    error("Failed to download binary.");
+  return path.join(APEX_DIR, "packages", "opencode", "dist", `apex-${platform}-${arch}`, "bin", platform === "windows" ? "apex.exe" : "apex");
+}
+function buildApex() {
+  log("");
+  log("Installing dependencies with bun (skipping native build scripts)...");
+  const installResult = exec("bun", ["install", "--ignore-scripts"], APEX_DIR);
+  if (installResult !== 0) {
+    error("Failed to install dependencies.");
     return 1;
   }
-  log("Extracting binary...");
-  let extractResult;
-  if (platform === "linux") {
-    extractResult = execQuiet("tar", ["-xzf", downloadPath, "-C", tempDir]);
-  } else if (platform === "windows") {
-    extractResult = execQuiet("tar", ["-xf", downloadPath, "-C", tempDir]);
-    if (extractResult.status !== 0) {
-      log("tar extraction failed, trying PowerShell...");
-      const psCommand = `Expand-Archive -Path '${downloadPath}' -DestinationPath '${tempDir}' -Force`;
-      extractResult = execQuiet("powershell.exe", [
-        "-NoProfile",
-        "-NonInteractive",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-Command",
-        psCommand
-      ]);
-    }
-  } else {
-    extractResult = execQuiet("unzip", ["-q", downloadPath, "-d", tempDir]);
-  }
-  if (extractResult.status !== 0) {
-    error("Failed to extract binary.");
-    if (extractResult.stderr) {
-      const stderr = extractResult.stderr.toString().trim();
-      if (stderr)
-        log(`Error: ${stderr}`);
-    }
-    if (platform === "windows") {
-      log("Please install Git for Windows (includes tar): https://git-scm.com/download/win");
-    }
-    fs.rmSync(tempDir, { recursive: true, force: true });
+  log("");
+  log("Building APEX binary...");
+  const buildResult = exec("bun", ["run", "build"], path.join(APEX_DIR, "packages", "opencode"));
+  if (buildResult !== 0) {
+    error("Failed to build APEX binary.");
     return 1;
   }
-  const extractedBinary = path.join(tempDir, platform === "windows" ? "opencode.exe" : "opencode");
-  if (!fs.existsSync(extractedBinary)) {
-    error("Binary not found in archive.");
-    fs.rmSync(tempDir, { recursive: true, force: true });
+  const binaryPath = getBinaryPath();
+  if (!fs.existsSync(binaryPath)) {
+    error(`Binary not found at ${binaryPath}`);
     return 1;
   }
-  ensureDir(targetDir);
-  fs.copyFileSync(extractedBinary, targetBinary);
-  if (!isWindows()) {
-    fs.chmodSync(targetBinary, 493);
-  }
-  fs.rmSync(tempDir, { recursive: true, force: true });
-  log("Copying APEX assets...");
-  const sourceAssets = path.join(APEX_DIR, "packages", "opencode", "assets");
-  const targetAssets = path.join(distDir, "assets");
-  if (fs.existsSync(sourceAssets)) {
-    ensureDir(targetAssets);
-    fs.cpSync(sourceAssets, targetAssets, { recursive: true, force: true });
-  }
-  success("Binary and assets ready!");
+  success("APEX binary built successfully!");
   return 0;
 }
 function setup() {
@@ -169,13 +118,14 @@ function setup() {
     log("Install git and try again: https://git-scm.com/downloads");
     process.exit(1);
   }
-  if (isWindows()) {
-    warn("Windows detected: APEX uses a pre-built binary, no compiler needed.");
-    log("");
+  if (!checkCommand("bun")) {
+    error("bun is required but not found in PATH.");
+    log("Install Bun first: https://bun.sh/docs/installation");
+    process.exit(1);
   }
   if (isApexInstalled()) {
     warn(`APEX is already installed at ${APEX_DIR}`);
-    log("Run `apex update` to pull the latest changes, or `apex dev` to start.");
+    log("Run `apex update` to pull the latest changes, or `apex` to start.");
     process.exit(0);
   }
   log(`Installing APEX into ${APEX_DIR}...`);
@@ -185,28 +135,9 @@ function setup() {
     error("Failed to clone the APEX repository.");
     process.exit(1);
   }
-  log("");
-  log("Downloading APEX binary...");
-  const binaryResult = downloadApexBinary();
-  if (binaryResult !== 0) {
-    warn("Failed to download binary.");
-    log("You can still use APEX by building from source if you have Bun installed.");
-  }
-  if (checkCommand("bun")) {
-    log("");
-    log("Installing source dependencies with bun (optional)...");
-    const installResult = exec("bun", ["install"], APEX_DIR);
-    if (installResult !== 0) {
-      warn("Failed to install source dependencies.");
-      if (isWindows()) {
-        log("This usually means Visual Studio Build Tools are missing.");
-        log("The pre-built binary is still available; run `apex` to use it.");
-      }
-    }
-  } else {
-    log("");
-    log("Bun not found; skipping source dependencies.");
-    log("Install Bun to run from source: https://bun.sh/docs/installation");
+  const buildResult = buildApex();
+  if (buildResult !== 0) {
+    process.exit(1);
   }
   log("");
   success("APEX installed successfully!");
@@ -222,29 +153,20 @@ function update() {
     log("Run `apex setup` to install it first.");
     process.exit(1);
   }
+  if (!checkCommand("bun")) {
+    error("bun is required but not found in PATH.");
+    log("Install Bun first: https://bun.sh/docs/installation");
+    process.exit(1);
+  }
   log("Updating APEX...");
   const pullResult = exec("git", ["pull"], APEX_DIR);
   if (pullResult !== 0) {
     error("Failed to pull latest changes.");
     process.exit(1);
   }
-  if (checkCommand("bun")) {
-    log("Re-installing source dependencies with bun (optional)...");
-    const installResult = exec("bun", ["install"], APEX_DIR);
-    if (installResult !== 0) {
-      warn("Failed to re-install source dependencies.");
-      if (isWindows()) {
-        log("This usually means Visual Studio Build Tools are missing.");
-        log("The pre-built binary will still be updated.");
-      }
-    }
-  } else {
-    log("Bun not found; skipping source dependencies.");
-  }
-  log("Updating APEX binary...");
-  const binaryResult = downloadApexBinary(true);
-  if (binaryResult !== 0) {
-    warn("Failed to update binary.");
+  const buildResult = buildApex();
+  if (buildResult !== 0) {
+    process.exit(1);
   }
   success("APEX updated successfully!");
 }
@@ -255,30 +177,17 @@ function dev() {
     process.exit(1);
   }
   log("Starting APEX terminal UI...");
-  const platform = getPlatform();
-  const arch = getArch();
-  const binaryPath = path.join(APEX_DIR, "packages", "opencode", "dist-restored", `apex-${platform}-${arch}`, "bin", platform === "windows" ? "apex.exe" : "apex");
-  if (fs.existsSync(binaryPath)) {
-    log("Using compiled binary...");
-    if (isWindows()) {
-      exec(path.join(APEX_DIR, "apex.cmd"), [], APEX_DIR);
-    } else {
-      exec("bash", [path.join(APEX_DIR, "apex")], APEX_DIR);
-    }
-    return;
-  }
-  log("Binary not found, running from source with APEX agent...");
-  if (!checkCommand("bun")) {
-    error("Bun is required to run APEX from source.");
-    log("Install Bun: https://bun.sh/docs/installation");
+  const binaryPath = getBinaryPath();
+  if (!fs.existsSync(binaryPath)) {
+    error("APEX binary not found.");
+    log("Run `apex update` to build it.");
     process.exit(1);
   }
-  if (!fs.existsSync(path.join(APEX_DIR, "node_modules"))) {
-    error("Source dependencies are missing.");
-    log("Run `bun install` in ~/.config/apex, or reinstall with Bun available.");
-    process.exit(1);
+  if (isWindows()) {
+    exec(path.join(APEX_DIR, "apex.cmd"), [], APEX_DIR);
+  } else {
+    exec("bash", [path.join(APEX_DIR, "apex")], APEX_DIR);
   }
-  exec("bun", ["run", "--cwd", "packages/opencode", "--conditions=browser", "src/index.ts", "--agent", "forger"], APEX_DIR);
 }
 function uninstall() {
   if (!fs.existsSync(APEX_DIR)) {
@@ -312,7 +221,7 @@ function showHelp() {
   log("");
   log("Commands:");
   log(`  setup      Install APEX into ~/.config/apex (one-time)`);
-  log(`  update     Pull latest changes and re-install dependencies`);
+  log(`  update     Pull latest changes and rebuild the APEX binary`);
   log(`  dev        Start the APEX terminal UI`);
   log(`  uninstall  Remove APEX from ~/.config/apex`);
   log(`  help       Show this help message`);
