@@ -61,6 +61,13 @@ Isso vai clonar o repositório automaticamente em `~/.config/apex`, instalar as 
 
 O script `install` na raiz do repositório baixa o binário da CLI do OpenCode; para instalar o código-fonte do APEX em si, execute `bun install` a partir da raiz do repositório.
 
+### Desinstalar
+
+```bash
+apex uninstall       # Remove o APEX de ~/.config/apex
+npm uninstall -g @apex-code/apex   # Remove o CLI
+```
+
 Comandos comuns de desenvolvimento:
 
 ```bash

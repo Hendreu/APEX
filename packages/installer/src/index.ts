@@ -4,7 +4,7 @@ import fs from "fs"
 import os from "os"
 import path from "path"
 
-const REPO_URL = "https://github.com/anomalyco/opencode.git"
+const REPO_URL = "https://github.com/Hendreu/APEX.git"
 const APEX_DIR = path.join(os.homedir(), ".config", "apex")
 
 const colors = {
@@ -185,21 +185,55 @@ function dev() {
   }
 }
 
+function uninstall() {
+  if (!isApexInstalled()) {
+    warn("APEX is not installed.")
+    process.exit(0)
+  }
+
+  log("")
+  warn(`This will remove APEX from ${APEX_DIR}`)
+  log("")
+
+  if (isWindows()) {
+    const result = execQuiet("rmdir", ["/s", "/q", APEX_DIR])
+    if (result.status !== 0) {
+      error("Failed to remove APEX directory.")
+      process.exit(1)
+    }
+  } else {
+    const result = execQuiet("rm", ["-rf", APEX_DIR])
+    if (result.status !== 0) {
+      error("Failed to remove APEX directory.")
+      process.exit(1)
+    }
+  }
+
+  success("APEX uninstalled successfully!")
+  log("")
+  log("To completely remove the CLI, run:")
+  log("  npm uninstall -g @apex-code/apex")
+  log("")
+}
+
 function showHelp() {
   log(`${colors.cyan}APEX Protocol CLI${colors.reset}`)
   log("")
   log("Commands:")
-  log(`  setup    Install APEX into ~/.config/apex (one-time)`)
-  log(`  update   Pull latest changes and re-install dependencies`)
-  log(`  dev      Start the APEX terminal UI`)
-  log(`  help     Show this help message`)
+  log(`  setup      Install APEX into ~/.config/apex (one-time)`)
+  log(`  update     Pull latest changes and re-install dependencies`)
+  log(`  dev        Start the APEX terminal UI`)
+  log(`  uninstall  Remove APEX from ~/.config/apex`)
+  log(`  help       Show this help message`)
   log("")
   log(`Current install directory: ${APEX_DIR}`)
   log(`Installed: ${isApexInstalled() ? "yes" : "no"}`)
   log("")
 }
 
-const command = process.argv[2] ?? "help"
+const rawCommand = process.argv[2]
+
+const command = rawCommand ?? (isApexInstalled() ? "dev" : "help")
 
 switch (command) {
   case "setup":
@@ -210,6 +244,9 @@ switch (command) {
     break
   case "dev":
     dev()
+    break
+  case "uninstall":
+    uninstall()
     break
   case "help":
   case "--help":
