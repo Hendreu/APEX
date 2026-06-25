@@ -1,6 +1,6 @@
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import path from "path"
-import { pathToFileURL } from "url"
+import { fileURLToPath, pathToFileURL } from "url"
 import { Effect, Layer, Context, Schema } from "effect"
 import { NamedError } from "@opencode-ai/core/util/error"
 import type { Agent } from "@/agent/agent"
@@ -224,6 +224,14 @@ const discoverSkills = Effect.fnUntraced(function* (
     for (const dir of pulledDirs) {
       yield* scan(state, dir, SKILL_PATTERN)
     }
+  }
+
+  const isBun = path.basename(process.execPath).toLowerCase().startsWith("bun")
+  const builtinSkillsDir = isBun
+    ? path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../assets/skills")
+    : path.join(path.dirname(process.execPath), "../assets/skills")
+  if (yield* fsys.isDir(builtinSkillsDir)) {
+    yield* scan(state, builtinSkillsDir, APEX_SKILL_PATTERN)
   }
 
   return {
