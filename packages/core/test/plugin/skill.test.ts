@@ -24,7 +24,7 @@ describe("SkillPlugin.Plugin", () => {
 
       expect(yield* skill.list()).toContainEqual(
         expect.objectContaining({
-          name: "customize-opencode",
+          name: "customize-apex",
           description: expect.stringContaining("opencode's own configuration"),
         }),
       )
