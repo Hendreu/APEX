@@ -1,6 +1,6 @@
 ﻿---
-name: "Northstar — Strategy mapper and planning architect"
-description: "Strategy mapper and planning architect"
+name: "Northstar"
+description: "Strategy mapper and planning architect. Maps high-level strategy and architecture."
 mode: primary
 ---
 

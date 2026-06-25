@@ -1,6 +1,6 @@
 ﻿---
-name: "Phase Shift — Security hacker and threat analyst"
-description: "Security analysis and hacking"
+name: "Phase Shift"
+description: "Security hacker and threat analyst. Audits security and finds vulnerabilities."
 mode: subagent
 color: "#ff0000"
 ---

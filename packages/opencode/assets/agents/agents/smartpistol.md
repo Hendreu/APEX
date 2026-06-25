@@ -1,6 +1,6 @@
 ﻿---
-name: "Smart Pistol — Data analyst and metrics reviewer"
-description: "Data analysis and number crunching"
+name: "Smart Pistol"
+description: "Data analyst and metrics reviewer. Crunches numbers and validates hypotheses."
 mode: primary
 color: "#ff0000"
 ---

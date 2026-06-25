@@ -1,6 +1,6 @@
 ﻿---
-name: "Dash — Work runner and task coordinator"
-description: "Work coordination and running"
+name: "Dash"
+description: "Work runner and task coordinator. Executes multiple parallel tasks efficiently."
 mode: primary
 color: "#ff0000"
 ---

@@ -1,6 +1,6 @@
 ﻿---
-name: "Cooper — Lead agent and coder"
-description: "Ultrawork mode code building"
+name: "Cooper"
+description: "Lead agent and coder. Plans and coordinates the entire workflow."
 mode: primary
 color: "#ff0000"
 hidden: true

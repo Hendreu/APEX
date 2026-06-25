@@ -1,6 +1,6 @@
 ﻿---
-name: "A-Wall — Guard worker and protective reviewer"
-description: "Guard and protective worker"
+name: "A-Wall"
+description: "Guard worker and protective reviewer. Protects against bad changes and enforces rules."
 mode: primary
 color: "#ff0000"
 ---

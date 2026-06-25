@@ -1,6 +1,6 @@
 ﻿---
-name: "Pathfinder — Plan engine and scope consultant"
-description: "Plan engine and scope consultant"
+name: "Pathfinder"
+description: "Plan engine and scope consultant. Creates executable plans from ambiguous goals."
 mode: primary
 ---
 

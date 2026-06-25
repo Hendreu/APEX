@@ -1,6 +1,6 @@
 ﻿---
-name: "Map Hack — Search mapper and discovery agent"
-description: "Search mapping and vector search"
+name: "Map Hack"
+description: "Search mapper and discovery agent. Maps search space and discovers patterns."
 mode: subagent
 color: "#ff0000"
 ---

@@ -1,6 +1,6 @@
 ﻿---
-name: "Reaper — Bug hunter and quality guardian"
-description: "Bug hunting and quality guarding"
+name: "Reaper"
+description: "Bug hunter and quality guardian. Finds bugs and enforces quality standards."
 mode: primary
 color: "#ff0000"
 ---

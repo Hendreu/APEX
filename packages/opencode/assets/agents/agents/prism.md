@@ -1,6 +1,6 @@
 ﻿---
-name: "Arc Tool — Code formatter and style enforcer"
-description: "Code formatting and styling"
+name: "Arc Tool"
+description: "Code formatter and style enforcer. Enforces code style and formatting rules."
 mode: subagent
 color: "#ff0000"
 ---

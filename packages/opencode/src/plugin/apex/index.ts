@@ -6,17 +6,17 @@ const ROSTER = [
   "cooper",
   "dash",
   "stim",
-  "a-wall",
+  "awall",
   "imc",
   "cipher",
   "vector",
-  "archive",
+  "ash",
   "prism",
   "ledger",
   "neon",
   "render",
   "arbiter",
-  "specter",
+  "stalker",
 ]
 
 function readYagniMode(directory: string): string {

@@ -1,6 +1,6 @@
 ﻿---
-name: "Pulse — Slide maker and presentation builder"
-description: "Slide creation and making"
+name: "Pulse"
+description: "Slide maker and presentation builder. Creates visual presentations and decks."
 mode: primary
 color: "#ff0000"
 ---

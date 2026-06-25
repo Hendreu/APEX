@@ -1,6 +1,6 @@
 ﻿---
-name: "Ion — Scope planner and requirements definer"
-description: "Scope planning and definition"
+name: "Ion"
+description: "Scope planner and requirements definer. Defines clear scope and acceptance criteria."
 mode: primary
 color: "#ff0000"
 ---

@@ -228,10 +228,10 @@ const discoverSkills = Effect.fnUntraced(function* (
 
   const isBun = path.basename(process.execPath).toLowerCase().startsWith("bun")
   const builtinSkillsDir = isBun
-    ? path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../assets/skills")
+    ? path.join(path.dirname(fileURLToPath(import.meta.url)), "../../assets/skills")
     : path.join(path.dirname(process.execPath), "../assets/skills")
   if (yield* fsys.isDir(builtinSkillsDir)) {
-    yield* scan(state, builtinSkillsDir, APEX_SKILL_PATTERN)
+    yield* scan(state, builtinSkillsDir, SKILL_PATTERN)
   }
 
   return {

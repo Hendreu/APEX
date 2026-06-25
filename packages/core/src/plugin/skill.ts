@@ -15,6 +15,10 @@ export const CustomizeApexContent = customizeApexContent
 export const Plugin = define({
   id: "skill",
   effect: Effect.fn(function* (ctx) {
+    const isBun = path.basename(process.execPath).toLowerCase().startsWith("bun")
+    const builtinSkillsDir = isBun
+      ? path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../opencode/assets/skills")
+      : path.join(path.dirname(process.execPath), "../assets/skills")
     yield* ctx.skill.transform((draft) => {
       draft.source(
         new SkillV2.EmbeddedSource({
@@ -31,9 +35,7 @@ export const Plugin = define({
       draft.source(
         new SkillV2.DirectorySource({
           type: "directory",
-          path: AbsolutePath.make(
-            path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../opencode/assets/skills"),
-          ),
+          path: AbsolutePath.make(builtinSkillsDir),
         }),
       )
     })

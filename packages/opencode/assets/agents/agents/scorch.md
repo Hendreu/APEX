@@ -1,6 +1,6 @@
 ﻿---
-name: "Scorch — Design planner and architecture reviewer"
-description: "Design scoping and planning"
+name: "Scorch"
+description: "Design planner and architecture reviewer. Scopes and validates design decisions."
 mode: primary
 color: "#ff0000"
 ---

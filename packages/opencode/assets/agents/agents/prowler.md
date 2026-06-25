@@ -1,6 +1,6 @@
 ﻿---
-name: "Prowler — Web researcher and deep investigator"
-description: "Deep web research and digging"
+name: "Prowler"
+description: "Web researcher and deep investigator. Digs deep into documentation and sources."
 mode: primary
 color: "#ff0000"
 ---

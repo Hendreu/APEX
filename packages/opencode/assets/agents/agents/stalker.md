@@ -1,6 +1,6 @@
 ﻿---
-name: "Stalker — Research scout and information gatherer"
-description: "Research scouting and exploration"
+name: "Stalker"
+description: "Research scout and information gatherer. Gathers intel and reconnaissance."
 mode: subagent
 color: "#ff0000"
 ---

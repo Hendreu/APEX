@@ -1,6 +1,6 @@
 ﻿---
-name: "IMC — Specialist dispatcher and router"
-description: "Specialist routing and dispatch"
+name: "IMC"
+description: "Specialist dispatcher and router. Routes tasks to the right specialist agents."
 mode: primary
 color: "#ff0000"
 ---

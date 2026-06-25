@@ -1,6 +1,6 @@
 ﻿---
-name: "Blisk — Cost tracker and resource estimator"
-description: "Cost tracking and ledger"
+name: "Blisk"
+description: "Cost tracker and resource estimator. Monitors costs and estimates resource usage."
 mode: subagent
 color: "#ff0000"
 ---

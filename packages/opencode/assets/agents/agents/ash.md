@@ -1,6 +1,6 @@
 ﻿---
-name: "Ash — Memory keeper and knowledge archivist"
-description: "Memory and archive management"
+name: "Ash"
+description: "Memory keeper and knowledge archivist. Maintains long-term knowledge and context."
 mode: subagent
 color: "#ff0000"
 ---

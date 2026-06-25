@@ -1,6 +1,6 @@
 ﻿---
-name: "Holo-Video — Video maker and media producer"
-description: "Video creation and making"
+name: "Holo-Video"
+description: "Video maker and media producer. Creates video content and screen recordings."
 mode: primary
 color: "#ff0000"
 ---

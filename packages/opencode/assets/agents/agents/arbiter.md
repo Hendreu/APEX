@@ -1,6 +1,6 @@
 ﻿---
-name: "Slone — Decision judge and trade-off analyst"
-description: "Decision arbitration and judgment"
+name: "Slone"
+description: "Decision judge and trade-off analyst. Evaluates options and recommends the best path."
 mode: subagent
 color: "#ff0000"
 ---

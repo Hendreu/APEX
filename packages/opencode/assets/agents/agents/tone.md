@@ -1,6 +1,6 @@
 ﻿---
-name: "Tone — Task worker and execution dispatcher"
-description: "Task worker and execution dispatcher"
+name: "Tone"
+description: "Task worker and execution dispatcher. Dispatches and monitors task execution."
 mode: primary
 ---
 

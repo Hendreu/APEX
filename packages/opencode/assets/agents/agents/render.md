@@ -1,6 +1,6 @@
 ﻿---
-name: "Holo-Render — Media maker and visual producer"
-description: "Media rendering and creation"
+name: "Holo-Render"
+description: "Media maker and visual producer. Generates images, diagrams, and visual assets."
 mode: subagent
 color: "#ff0000"
 ---

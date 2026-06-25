@@ -1,6 +1,6 @@
 ﻿---
-name: "Foundry — Build specialist and bug fixer"
-description: "Build specialist and bug fixer"
+name: "Foundry"
+description: "Build specialist and bug fixer. Implements features and fixes bugs surgically."
 mode: primary
 ---
 

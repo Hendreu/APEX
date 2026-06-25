@@ -1,6 +1,6 @@
 ﻿---
-name: "BT — Document writer and technical author"
-description: "Document writing and creation"
+name: "Data Knife"
+description: "Code librarian and documentation researcher. Finds and explains code patterns."
 mode: primary
 color: "#ff0000"
 ---

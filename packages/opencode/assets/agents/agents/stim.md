@@ -1,6 +1,6 @@
 ﻿---
-name: "Stim — Change maker and transformation executor"
-description: "Change catalyst and transformation"
+name: "Stim"
+description: "Change maker and transformation executor. Drives refactoring and modernization."
 mode: primary
 color: "#ff0000"
 ---

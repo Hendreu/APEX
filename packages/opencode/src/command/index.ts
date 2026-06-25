@@ -19,7 +19,7 @@ const PROMPT_SWARM = [
   "Your job: immediately invoke the `swarm` tool with the following parameters:",
   "- task: the user's overall goal (infer from $ARGUMENTS)",
   "- count: number of workers, default 20",
-  "- agent: which subagent to use, default specter for exploration/research or cooper for implementation",
+  "- agent: which subagent to use, default stalker for exploration/research or cooper for implementation",
   "- instructions: any constraints the user gave",
   "",
   "Do not do the work yourself. Delegate entirely to the swarm.",

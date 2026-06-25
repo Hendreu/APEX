@@ -1,6 +1,6 @@
 ﻿---
-name: "Anchor — Master orchestrator and verification gate"
-description: "Master orchestrator and verification gate"
+name: "Anchor"
+description: "Master orchestrator and verification gate. Coordinates all agents and verifies completion."
 mode: primary
 ---
 

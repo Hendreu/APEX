@@ -1,6 +1,6 @@
 ﻿---
-name: "Grapple — Context scout and codebase explorer"
-description: "Context exploration and scouting"
+name: "Grapple"
+description: "Context scout and codebase explorer. Maps project structure and dependencies."
 mode: primary
 color: "#ff0000"
 ---
