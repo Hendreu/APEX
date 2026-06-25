@@ -119,6 +119,13 @@ function downloadApexBinary(): number {
   let extractResult
   if (platform === "linux") {
     extractResult = execQuiet("tar", ["-xzf", downloadPath, "-C", tempDir])
+  } else if (platform === "windows") {
+    extractResult = execQuiet("powershell.exe", [
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      `Expand-Archive -Path '${downloadPath}' -DestinationPath '${tempDir}' -Force`,
+    ])
   } else {
     extractResult = execQuiet("unzip", ["-q", downloadPath, "-d", tempDir])
   }
