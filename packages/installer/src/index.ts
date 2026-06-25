@@ -68,6 +68,85 @@ function isWindows(): boolean {
   return process.platform === "win32"
 }
 
+function getPlatform(): string {
+  switch (process.platform) {
+    case "darwin": return "darwin"
+    case "linux": return "linux"
+    case "win32": return "windows"
+    default: return process.platform
+  }
+}
+
+function getArch(): string {
+  switch (process.arch) {
+    case "x64": return "x64"
+    case "arm64": return "arm64"
+    case "arm": return "arm"
+    default: return process.arch
+  }
+}
+
+function downloadApexBinary(): number {
+  const platform = getPlatform()
+  const arch = getArch()
+  const base = `apex-${platform}-${arch}`
+  const targetDir = path.join(APEX_DIR, "packages", "opencode", "dist-restored", base, "bin")
+  const targetBinary = path.join(targetDir, platform === "windows" ? "apex.exe" : "apex")
+
+  if (fs.existsSync(targetBinary)) {
+    log("Binary already exists, skipping download.")
+    return 0
+  }
+
+  const tempDir = path.join(os.tmpdir(), `apex-install-${Date.now()}`)
+  ensureDir(tempDir)
+
+  const archiveExt = platform === "linux" ? ".tar.gz" : ".zip"
+  const filename = `opencode-${platform}-${arch}${archiveExt}`
+  const url = `https://github.com/anomalyco/opencode/releases/latest/download/${filename}`
+  const downloadPath = path.join(tempDir, filename)
+
+  log(`Downloading from ${url}...`)
+
+  const downloadResult = execQuiet("curl", ["-fsSL", "-o", downloadPath, url])
+  if (downloadResult.status !== 0) {
+    error("Failed to download binary.")
+    return 1
+  }
+
+  log("Extracting binary...")
+
+  let extractResult
+  if (platform === "linux") {
+    extractResult = execQuiet("tar", ["-xzf", downloadPath, "-C", tempDir])
+  } else {
+    extractResult = execQuiet("unzip", ["-q", downloadPath, "-d", tempDir])
+  }
+
+  if (extractResult.status !== 0) {
+    error("Failed to extract binary.")
+    return 1
+  }
+
+  const extractedBinary = path.join(tempDir, platform === "windows" ? "opencode.exe" : "opencode")
+  if (!fs.existsSync(extractedBinary)) {
+    error("Binary not found in archive.")
+    return 1
+  }
+
+  ensureDir(targetDir)
+  fs.copyFileSync(extractedBinary, targetBinary)
+
+  if (!isWindows()) {
+    fs.chmodSync(targetBinary, 0o755)
+  }
+
+  fs.rmSync(tempDir, { recursive: true, force: true })
+
+  success("Binary downloaded successfully!")
+  return 0
+}
+
 function setup() {
   log("")
   log(`${colors.cyan}APEX Protocol Installer${colors.reset}`)
@@ -125,16 +204,12 @@ function setup() {
   }
 
   log("")
-  log("Downloading OpenCode binary...")
-  const opencodeInstallResult = exec(
-    isWindows() ? "bash" : "bash",
-    [path.join(APEX_DIR, "install")],
-    APEX_DIR
-  )
-  if (opencodeInstallResult !== 0) {
-    warn("Failed to download OpenCode binary.")
-    log("You can still use APEX, but the full terminal UI may not be available.")
-    log("To retry later, run the install script manually from the APEX directory.")
+  log("Downloading APEX binary...")
+  const binaryResult = downloadApexBinary()
+  if (binaryResult !== 0) {
+    warn("Failed to download APEX binary.")
+    log("You can still use APEX by running the source directly.")
+    log("To retry later, run: apex update")
   }
 
   log("")
@@ -165,6 +240,12 @@ function update() {
   if (installResult !== 0) {
     error("Failed to install dependencies.")
     process.exit(1)
+  }
+
+  log("Updating APEX binary...")
+  const binaryResult = downloadApexBinary()
+  if (binaryResult !== 0) {
+    warn("Failed to update binary, but source is up to date.")
   }
 
   success("APEX updated successfully!")
