@@ -84,7 +84,8 @@ function downloadApexBinary() {
   const platform = getPlatform();
   const arch = getArch();
   const base = `apex-${platform}-${arch}`;
-  const targetDir = path.join(APEX_DIR, "packages", "opencode", "dist-restored", base, "bin");
+  const distDir = path.join(APEX_DIR, "packages", "opencode", "dist-restored", base);
+  const targetDir = path.join(distDir, "bin");
   const targetBinary = path.join(targetDir, platform === "windows" ? "apex.exe" : "apex");
   if (fs.existsSync(targetBinary)) {
     log("Binary already exists, skipping download.");
@@ -107,18 +108,18 @@ function downloadApexBinary() {
   if (platform === "linux") {
     extractResult = execQuiet("tar", ["-xzf", downloadPath, "-C", tempDir]);
   } else if (platform === "windows") {
-    const psCommand = `Expand-Archive -Path "${downloadPath.replace(/\\/g, "\\\\")}" -DestinationPath "${tempDir.replace(/\\/g, "\\\\")}" -Force`;
-    extractResult = execQuiet("powershell.exe", [
-      "-NoProfile",
-      "-NonInteractive",
-      "-ExecutionPolicy",
-      "Bypass",
-      "-Command",
-      psCommand
-    ]);
+    extractResult = execQuiet("tar", ["-xf", downloadPath, "-C", tempDir]);
     if (extractResult.status !== 0) {
-      log("PowerShell extraction failed, trying tar (Git Bash)...");
-      extractResult = execQuiet("tar", ["-xf", downloadPath, "-C", tempDir]);
+      log("tar extraction failed, trying PowerShell...");
+      const psCommand = `Expand-Archive -Path '${downloadPath}' -DestinationPath '${tempDir}' -Force`;
+      extractResult = execQuiet("powershell.exe", [
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        psCommand
+      ]);
     }
   } else {
     extractResult = execQuiet("unzip", ["-q", downloadPath, "-d", tempDir]);
@@ -126,17 +127,20 @@ function downloadApexBinary() {
   if (extractResult.status !== 0) {
     error("Failed to extract binary.");
     if (extractResult.stderr) {
-      log(`Error: ${extractResult.stderr.toString().trim()}`);
+      const stderr = extractResult.stderr.toString().trim();
+      if (stderr)
+        log(`Error: ${stderr}`);
     }
     if (platform === "windows") {
-      log("Please install 7-Zip or Git for Windows, or extract manually:");
-      log(`  ${downloadPath}`);
+      log("Please install Git for Windows (includes tar): https://git-scm.com/download/win");
     }
+    fs.rmSync(tempDir, { recursive: true, force: true });
     return 1;
   }
   const extractedBinary = path.join(tempDir, platform === "windows" ? "opencode.exe" : "opencode");
   if (!fs.existsSync(extractedBinary)) {
     error("Binary not found in archive.");
+    fs.rmSync(tempDir, { recursive: true, force: true });
     return 1;
   }
   ensureDir(targetDir);
@@ -145,7 +149,14 @@ function downloadApexBinary() {
     fs.chmodSync(targetBinary, 493);
   }
   fs.rmSync(tempDir, { recursive: true, force: true });
-  success("Binary downloaded successfully!");
+  log("Copying APEX assets...");
+  const sourceAssets = path.join(APEX_DIR, "packages", "opencode", "assets");
+  const targetAssets = path.join(distDir, "assets");
+  if (fs.existsSync(sourceAssets)) {
+    ensureDir(targetAssets);
+    fs.cpSync(sourceAssets, targetAssets, { recursive: true, force: true });
+  }
+  success("Binary and assets ready!");
   return 0;
 }
 function setup() {
@@ -200,16 +211,15 @@ function setup() {
   log("Downloading APEX binary...");
   const binaryResult = downloadApexBinary();
   if (binaryResult !== 0) {
-    warn("Failed to download APEX binary.");
-    log("You can still use APEX by running the source directly.");
-    log("To retry later, run: apex update");
+    warn("Failed to download binary.");
+    log("You can still use APEX by running from source.");
   }
   log("");
   success("APEX installed successfully!");
   log("");
   log("Next steps:");
   log(`  cd ${APEX_DIR}        ${colors.dim}# Navigate to the APEX directory${colors.reset}`);
-  log(`  apex dev              ${colors.dim}# Start the terminal UI${colors.reset}`);
+  log(`  apex                  ${colors.dim}# Start the terminal UI${colors.reset}`);
   log("");
 }
 function update() {
@@ -244,10 +254,19 @@ function dev() {
     process.exit(1);
   }
   log("Starting APEX terminal UI...");
-  if (isWindows()) {
-    exec(path.join(APEX_DIR, "apex.cmd"), [], APEX_DIR);
+  const platform = getPlatform();
+  const arch = getArch();
+  const binaryPath = path.join(APEX_DIR, "packages", "opencode", "dist-restored", `apex-${platform}-${arch}`, "bin", platform === "windows" ? "apex.exe" : "apex");
+  if (fs.existsSync(binaryPath)) {
+    log("Using compiled binary...");
+    if (isWindows()) {
+      exec(path.join(APEX_DIR, "apex.cmd"), [], APEX_DIR);
+    } else {
+      exec("bash", [path.join(APEX_DIR, "apex")], APEX_DIR);
+    }
   } else {
-    exec("bash", [path.join(APEX_DIR, "apex")], APEX_DIR);
+    log("Binary not found, running from source with APEX agent...");
+    exec("bun", ["run", "--cwd", "packages/opencode", "--conditions=browser", "src/index.ts", "--agent", "forger"], APEX_DIR);
   }
 }
 function uninstall() {

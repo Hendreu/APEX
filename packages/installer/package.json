@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@apex-code/apex",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "One-line installer for APEX Protocol — clones, installs deps, and sets up the CLI",
   "type": "module",
   "license": "MIT",
