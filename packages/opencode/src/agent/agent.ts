@@ -324,7 +324,7 @@ export const layer = Layer.effect(
             agents,
             values(),
             sortBy(
-              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "apex-revenant"), "desc"],
+              [(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "cooper"), "desc"],
               [(x) => x.name, "asc"],
             ),
           )
@@ -339,8 +339,8 @@ export const layer = Layer.effect(
             if (agent.hidden === true) throw new Error(`default agent "${c.default_agent}" is hidden`)
             return agent
           }
-          const revenant = agents["apex-revenant"]
-          if (revenant && revenant.mode !== "subagent" && revenant.hidden !== true) return revenant
+          const cooper = agents["cooper"]
+          if (cooper && cooper.mode !== "subagent" && cooper.hidden !== true) return cooper
           const visible = Object.values(agents).find((a) => a.mode !== "subagent" && a.hidden !== true)
           if (!visible) throw new Error("no primary visible agent found")
           return visible

@@ -19,7 +19,7 @@ const PROMPT_SWARM = [
   "Your job: immediately invoke the `swarm` tool with the following parameters:",
   "- task: the user's overall goal (infer from $ARGUMENTS)",
   "- count: number of workers, default 20",
-  "- agent: which subagent to use, default apex-specter for exploration/research or apex-forge for implementation",
+  "- agent: which subagent to use, default specter for exploration/research or cooper for implementation",
   "- instructions: any constraints the user gave",
   "",
   "Do not do the work yourself. Delegate entirely to the swarm.",
@@ -34,7 +34,7 @@ const PROMPT_SWARM_LOOP = [
   "- task: the user's overall goal (infer from $ARGUMENTS)",
   "- workers: workers per loop, default 10",
   "- max_iterations: default 10",
-  "- agent: which subagent to use, default apex-forge",
+  "- agent: which subagent to use, default cooper",
   "",
   "Do not do the work yourself. Delegate entirely to the swarm loop.",
 ].join("\n")

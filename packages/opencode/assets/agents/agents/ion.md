@@ -1,6 +1,6 @@
----
-name: "Scorch - Design Planner"
-description: "Design scoping and planning"
+﻿---
+name: "Ion — Scope planner and requirements definer"
+description: "Scope planning and definition"
 mode: primary
 color: "#ff0000"
 ---

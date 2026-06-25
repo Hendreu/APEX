@@ -17,7 +17,7 @@ export const Parameters = Schema.Struct({
   task: Schema.String.annotate({ description: "The large task to distribute across the swarm" }),
   count: Schema.optional(Schema.Number).annotate({ description: "Number of workers (default 20, max 50)" }),
   agent: Schema.optional(Schema.String).annotate({
-    description: "Subagent type to use for each worker (default: apex-specter)",
+    description: "Subagent type to use for each worker (default: specter)",
   }),
   instructions: Schema.optional(Schema.String).annotate({
     description: "Shared instructions appended to every worker prompt",
@@ -43,7 +43,7 @@ export const SwarmTool = Tool.define(
       if (!ops) return yield* Effect.fail(new Error("SwarmTool requires promptOps in ctx.extra"))
 
       const count = Math.min(Math.max(1, params.count ?? 20), 50)
-      const subagentType = params.agent ?? "apex-specter"
+      const subagentType = params.agent ?? "specter"
       const sharedInstructions = params.instructions ?? ""
 
       yield* ctx.ask({

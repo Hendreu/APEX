@@ -16,7 +16,7 @@ export const Parameters = Schema.Struct({
   max_iterations: Schema.optional(Schema.Number).annotate({ description: "Maximum loops (default 10)" }),
   workers: Schema.optional(Schema.Number).annotate({ description: "Workers per loop (default 10)" }),
   agent: Schema.optional(Schema.String).annotate({
-    description: "Subagent type for workers (default: apex-forge)",
+    description: "Subagent type for workers (default: cooper)",
   }),
 })
 
@@ -39,7 +39,7 @@ export const SwarmLoopTool = Tool.define(
 
       const maxIterations = Math.min(Math.max(1, params.max_iterations ?? 10), 50)
       const workers = Math.min(Math.max(1, params.workers ?? 10), 50)
-      const subagentType = params.agent ?? "apex-forge"
+      const subagentType = params.agent ?? "cooper"
 
       yield* ctx.ask({
         permission: "swarm_loop",
@@ -143,8 +143,8 @@ export const SwarmLoopTool = Tool.define(
 
         const reviewSession = yield* sessions.create({
           parentID: ctx.sessionID,
-          title: `SwarmLoop reviewer iter ${iteration} (@apex-arbiter)`,
-          agent: "apex-arbiter",
+          title: `SwarmLoop reviewer iter ${iteration} (@arbiter)`,
+          agent: "arbiter",
           permission: childPermission,
         })
 
@@ -163,7 +163,7 @@ export const SwarmLoopTool = Tool.define(
             providerID: model.providerID,
           },
           variant,
-          agent: "apex-arbiter",
+          agent: "arbiter",
           parts: reviewParts,
         })
         const reviewText = reviewResult.parts.findLast((item) => item.type === "text")?.text ?? ""

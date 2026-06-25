@@ -1,5 +1,5 @@
----
-name: "Holo Pilot - Picture Reader"
+﻿---
+name: "Holo Pilot — Image reader and visual analyst"
 description: "Image reading and analysis"
 mode: primary
 color: "#ff0000"

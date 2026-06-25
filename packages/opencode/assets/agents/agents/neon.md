@@ -1,5 +1,5 @@
----
-name: "Holo - UI Builder"
+﻿---
+name: "Holo — UI builder and interface designer"
 description: "User interface building"
 mode: subagent
 color: "#ff0000"

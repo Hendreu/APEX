@@ -1,5 +1,5 @@
----
-name: "Stim - Change Maker"
+﻿---
+name: "Stim — Change maker and transformation executor"
 description: "Change catalyst and transformation"
 mode: primary
 color: "#ff0000"

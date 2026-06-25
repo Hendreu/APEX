@@ -3,20 +3,20 @@ import fs from "fs"
 import path from "path"
 
 const ROSTER = [
-  "apex-revenant",
-  "apex-catalyst",
-  "apex-forge",
-  "apex-warden",
-  "apex-mastermind",
-  "apex-cipher",
-  "apex-vector",
-  "apex-archive",
-  "apex-prism",
-  "apex-ledger",
-  "apex-neon",
-  "apex-render",
-  "apex-arbiter",
-  "apex-specter",
+  "cooper",
+  "dash",
+  "stim",
+  "a-wall",
+  "imc",
+  "cipher",
+  "vector",
+  "archive",
+  "prism",
+  "ledger",
+  "neon",
+  "render",
+  "arbiter",
+  "specter",
 ]
 
 function readYagniMode(directory: string): string {

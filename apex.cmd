@@ -22,7 +22,7 @@ if /I "%first%"=="acp" goto noagent
 if "%first:~0,1%"=="-" goto noagent
 
 :tui
-"%BIN%" --agent "forger" %*
+"%BIN%" --agent "cooper" %*
 goto end
 
 :noagent

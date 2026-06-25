@@ -1,7 +1,7 @@
----
-name: "Map Hack - Search Mapper"
-description: "Search mapping and vector search"
-mode: subagent
+﻿---
+name: "Smart Pistol — Data analyst and metrics reviewer"
+description: "Data analysis and number crunching"
+mode: primary
 color: "#ff0000"
 ---
 
