@@ -1,7 +1,7 @@
 @echo off
 setlocal
 set "first=%~1"
-set "BIN=%~dp0packages\opencode\dist-restored\apex-windows-x64\bin\apex.exe"
+set "BIN=%~dp0packages\opencode\dist\apex-windows-x64\bin\apex.exe"
 
 if /I "%first%"=="" goto tui
 if /I "%first%"=="run" goto noagent
@@ -22,7 +22,7 @@ if /I "%first%"=="acp" goto noagent
 if "%first:~0,1%"=="-" goto noagent
 
 :tui
-"%BIN%" --agent "apex-forge" %*
+"%BIN%" --agent "forger" %*
 goto end
 
 :noagent
