@@ -107,17 +107,31 @@ function downloadApexBinary() {
   if (platform === "linux") {
     extractResult = execQuiet("tar", ["-xzf", downloadPath, "-C", tempDir]);
   } else if (platform === "windows") {
+    const psCommand = `Expand-Archive -Path "${downloadPath.replace(/\\/g, "\\\\")}" -DestinationPath "${tempDir.replace(/\\/g, "\\\\")}" -Force`;
     extractResult = execQuiet("powershell.exe", [
       "-NoProfile",
       "-NonInteractive",
+      "-ExecutionPolicy",
+      "Bypass",
       "-Command",
-      `Expand-Archive -Path '${downloadPath}' -DestinationPath '${tempDir}' -Force`
+      psCommand
     ]);
+    if (extractResult.status !== 0) {
+      log("PowerShell extraction failed, trying tar (Git Bash)...");
+      extractResult = execQuiet("tar", ["-xf", downloadPath, "-C", tempDir]);
+    }
   } else {
     extractResult = execQuiet("unzip", ["-q", downloadPath, "-d", tempDir]);
   }
   if (extractResult.status !== 0) {
     error("Failed to extract binary.");
+    if (extractResult.stderr) {
+      log(`Error: ${extractResult.stderr.toString().trim()}`);
+    }
+    if (platform === "windows") {
+      log("Please install 7-Zip or Git for Windows, or extract manually:");
+      log(`  ${downloadPath}`);
+    }
     return 1;
   }
   const extractedBinary = path.join(tempDir, platform === "windows" ? "opencode.exe" : "opencode");
